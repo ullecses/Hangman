@@ -14,10 +14,10 @@ public class Word {
         this.currentState = new StringBuilder("_".repeat(word.length()));
     }
 
-    /*@JsonProperty("hint")
+    @JsonProperty("hint")
     public void setHint(String hint) {
         this.hint = hint;
-    }*/
+    }
 
     public boolean guessLetter(char letter) {
         boolean correct = false;
