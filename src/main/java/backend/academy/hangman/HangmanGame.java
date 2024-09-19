@@ -1,5 +1,6 @@
 package backend.academy.hangman;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Random;
@@ -16,7 +17,11 @@ public class HangmanGame {
     public HangmanGame(InputStream input, PrintStream output) {
         this.input = input;
         this.output = output;
-        this.wordRepository = new WordRepository();
+        try {
+            this.wordRepository = new WordRepository();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         this.hangman = new HangmanDisplay(output);
     }
 
@@ -25,7 +30,7 @@ public class HangmanGame {
         Random random = new Random();
 
         String selectedCategory = selectCategory(scanner, random);
-        String selectedDifficulty = selectDifficulty(scanner, random);
+        DifficultyLevel selectedDifficulty = selectDifficulty(scanner, random);
 
         Word word = wordRepository.getWord(selectedCategory, selectedDifficulty);
         int wrongGuesses = 0;
@@ -37,12 +42,12 @@ public class HangmanGame {
             output.println("У Вас осталось " + (MAX_ATTEMPTS - wrongGuesses) + " неправильных попыток");
 
             if (hintUsed) {
-                output.println("Подсказка:" + word.getHint());
+                output.println("Подсказка: " + word.getHint());
+                output.print("Введите букву: ");
             } else {
-                output.println("Для появления подсказки вместо буквы нажмите Enter" + word.getHint());
+                output.print("Введите букву или для появления подсказки нажмите Enter: ");
             }
 
-            output.print("Введите букву или нажмите Enter для появления подсказки: ");
             String guess = scanner.nextLine().toLowerCase();
 
             if (guess.isEmpty()) {
@@ -86,6 +91,8 @@ public class HangmanGame {
                     return wordCategories[0];
                 case "2":
                     return wordCategories[1];
+                case "3":
+                    return wordCategories[2];
                 case "":
                     return wordCategories[random.nextInt(wordCategories.length)];
                 default:
@@ -94,7 +101,7 @@ public class HangmanGame {
         }
     }
 
-    private String selectDifficulty(Scanner scanner, Random random) {
+    private DifficultyLevel selectDifficulty(Scanner scanner, Random random) {
         output.println("Введите цифру, которая соответствует выбранной сложности "
             + DifficultyLevel.EASY + " (1), "
             + DifficultyLevel.MEDIUM + " (2), "
@@ -102,17 +109,17 @@ public class HangmanGame {
 
         while (true) {
             String selectedDifficulty = scanner.nextLine().trim();
-            DifficultyLevel[] complexity = DifficultyLevel.values();
+            //DifficultyLevel[] complexity = DifficultyLevel.values();
 
             switch (selectedDifficulty) {
                 case "1":
-                    return DifficultyLevel.EASY.name();
+                    return DifficultyLevel.EASY;
                 case "2":
-                    return DifficultyLevel.MEDIUM.name();
+                    return DifficultyLevel.MEDIUM;
                 case "3":
-                    return DifficultyLevel.HARD.name();
+                    return DifficultyLevel.HARD;
                 case "":
-                    return complexity[random.nextInt(complexity.length)].name();
+                    return DifficultyLevel.values()[random.nextInt(DifficultyLevel.values().length)];
                 default:
                     output.println("Некорректный ввод. Пожалуйста, введите 1, 2, 3 или оставьте строку пустой.");
             }

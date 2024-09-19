@@ -1,23 +1,23 @@
 package backend.academy.hangman;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+
 public class Word {
-    private final String word;
-    private final String hint;
+    @Getter private String word;
+    @Getter private String hint;
     private StringBuilder currentState;
 
-    public Word(String word, String hint) {
+    @JsonProperty("word")
+    public void setWord(String word) {
         this.word = word;
-        this.hint = hint;
         this.currentState = new StringBuilder("_".repeat(word.length()));
     }
 
-    public String getWord() {
-        return word;
-    }
-
-    public String getHint() {
-        return hint;
-    }
+    /*@JsonProperty("hint")
+    public void setHint(String hint) {
+        this.hint = hint;
+    }*/
 
     public boolean guessLetter(char letter) {
         boolean correct = false;

@@ -1,0 +1,50 @@
+{
+    "animals": {
+        "EASY": [
+            { "word": "cat", "hint": "A small domestic animal that catches mice" },
+            { "word": "dog", "hint": "A loyal companion, known as man's best friend" }
+        ],
+        "MEDIUM": [
+            { "word": "eagle", "hint": "A large bird of prey known for its sharp vision and powerful flight" },
+            { "word": "giraffe", "hint": "An intelligent marine mammal known for its playful behavior and communication skills" }
+        ],
+        "HARD": [
+            { "word": "hippopotamus", "hint": "A large herbivorous mammal that lives near rivers in Africa" },
+            { "word": "kangaroo", "hint": "A marsupial from Australia known for its jumping and carrying babies in a pouch" }
+        ]
+    },
+    "cities": {
+        "EASY": [
+            { "word": "Paris", "hint": "The capital city of France, known for the Eiffel Tower" },
+            { "word": "Tokyo", "hint": "The bustling capital of Japan, famous for its modern technology and culture" },
+            { "word": "Oslo", "hint": "The capital of Norway, known for its beautiful fjords" },
+            { "word": "Milan", "hint": "A major city in Italy known for its fashion and design" }
+        ],
+        "MEDIUM": [
+            { "word": "Berlin", "hint": "The capital of Germany, known for its historical significance and vibrant culture" },
+            { "word": "Toronto", "hint": "The largest city in Canada, known for its diverse culture and CN Tower" },
+            { "word": "Vienna", "hint": "The capital of Austria, famous for its imperial history and classical music" }
+        ],
+        "HARD": [
+            { "word": "Copenhagen", "hint": "The capital of Denmark, known for its historic buildings and modern design" },
+            { "word": "Budapest", "hint": "The capital of Hungary, known for its thermal baths and historic architecture" },
+            { "word": "Philadelphia", "hint": "A major city in the United States known for its rich history and cultural landmarks" }
+        ]
+    },
+    "countries": {
+        "EASY": [
+            { "word": "france", "hint": "A country with the Eiffel Tower." },
+            { "word": "china", "hint": "The most populous country in the world." }
+        ],
+        "MEDIUM": [
+            { "word": "canada", "hint": "The second largest country by land area, located in North America." },
+            { "word": "japan", "hint": "An island nation in East Asia, known for its technology and traditions." },
+            { "word": "brazil", "hint": "The largest country in South America, famous for the Amazon rainforest." },
+            { "word": "egypt", "hint": "A country in North Africa known for its ancient pyramids and the Nile River." }
+        ],
+        "HARD": [
+            { "word": "kazakhstan", "hint": "A country in Central Asia, one of the largest in the world by land area." },
+            { "word": "madagascar", "hint": "An island nation in the Indian Ocean, famous for its unique wildlife." }
+        ]
+    }
+}
