@@ -19,6 +19,14 @@ public class Word {
         this.hint = hint;
     }
 
+    public String getHint() {
+        return hint;
+    }
+
+    public String getWord() {
+        return word;
+    }
+
     public boolean guessLetter(char letter) {
         boolean correct = false;
         for (int i = 0; i < word.length(); i++) {
