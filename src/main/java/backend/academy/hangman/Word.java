@@ -3,9 +3,10 @@ package backend.academy.hangman;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
+@Getter
 public class Word {
-    @Getter private String word;
-    @Getter private String hint;
+    public String word;
+    public String hint;
     private StringBuilder currentState;
 
     @JsonProperty("word")
@@ -19,12 +20,12 @@ public class Word {
         this.hint = hint;
     }
 
-    public String getHint() {
-        return hint;
-    }
-
     public String getWord() {
         return word;
+    }
+
+    public String getHint() {
+        return hint;
     }
 
     public boolean guessLetter(char letter) {

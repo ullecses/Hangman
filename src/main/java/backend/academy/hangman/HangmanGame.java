@@ -1,64 +1,49 @@
 package backend.academy.hangman;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.util.Random;
-import java.util.Scanner;
 
 public class HangmanGame {
     public static final int MAX_ATTEMPTS = 6;
-    private final InputStream input;
-    private final PrintStream output;
+    private static final String HINT_PROMPT = "Hint: ";
+
     private final WordRepository wordRepository;
-    private final HangmanDisplay hangman;
+    private final GameInputOutput io;
     private boolean hintUsed = false;
 
-    public HangmanGame(InputStream input, PrintStream output) {
-        this.input = input;
-        this.output = output;
-        try {
-            this.wordRepository = new WordRepository();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        this.hangman = new HangmanDisplay(output);
+    public HangmanGame(GameInputOutput io, WordRepository wordRepository) {
+        this.io = io;
+        this.wordRepository = wordRepository;
     }
 
     public void start() {
-        Scanner scanner = new Scanner(input);
-        Random random = new Random();
-
-        String selectedCategory = selectCategory(scanner, random);
-        DifficultyLevel selectedDifficulty = selectDifficulty(scanner, random);
+        String selectedCategory = io.selectCategory(wordRepository.getCategories());
+        DifficultyLevel selectedDifficulty = io.selectDifficulty();
 
         Word word = wordRepository.getWord(selectedCategory, selectedDifficulty);
         int wrongGuesses = 0;
-        output.println("У Вас есть 6 попыток! Игра началась!");
+        io.displayMessage("You have 6 attempts! The game has begun!");
 
         while (wrongGuesses < MAX_ATTEMPTS && !word.isWordGuessed()) {
-            hangman.displayHangman(wrongGuesses);
-            output.println("Текущее состояние слова: " + word.getCurrentState());
-            output.println("У Вас осталось " + (MAX_ATTEMPTS - wrongGuesses) + " неправильных попыток");
+            io.displayHangman(wrongGuesses);
+            io.displayMessage("Current state of the word: " + word.getCurrentState() + "\nYou have "
+        + (MAX_ATTEMPTS - wrongGuesses) + " incorrect attempts left.");
 
             if (hintUsed) {
-                output.println("Подсказка: " + word.getHint());
-                output.print("Введите букву: ");
+                io.displayMessage(HINT_PROMPT + word.getHint() + "Enter letter: ");
             } else {
-                output.print("Введите букву или для появления подсказки нажмите Enter: ");
+                io.displayMessage("Enter a letter or press Enter to see a hint: ");
             }
 
-            String guess = scanner.nextLine().toLowerCase();
+            String guess = io.getUserInput();
 
-            if (guess.isEmpty()) {
-                output.println("Подсказка: " + word.getHint());
+            if (guess == null || guess.isEmpty()) { //!@
+                io.displayMessage(HINT_PROMPT + word.getHint());
                 hintUsed = true;
                 continue;
             } else if (guess.length() != 1 || !Character.isLetter(guess.charAt(0))) {
-                output.println("Некорректный ввод! Введите одну букву.");
+                io.displayMessage("Incorrect input! Enter one letter.");
                 continue;
             } else if (!(guess.charAt(0) >= 'a' && guess.charAt(0) <= 'z')) {
-                output.println("Введите одну английскую букву.");
+                io.displayMessage("Enter one English letter.");
                 continue;
             }
 
@@ -69,60 +54,9 @@ public class HangmanGame {
         }
 
         if (word.isWordGuessed()) {
-            output.println("Поздравляем! Вы отгадали слово: " + word.getWord());
+            io.displayMessage("Congratulations! You guessed the word: " + word.getWord());
         } else {
-            hangman.displayHangman(wrongGuesses);
-            output.println("Вы проиграли! Загаданное слово было: " + word.getWord());
-        }
-    }
-
-    private String selectCategory(Scanner scanner, Random random) {
-        String[] wordCategories = wordRepository.getCategories();
-        output.println("Введите цифру, которая соответствует выбранной категории "
-            + wordCategories[0] + "(1), "
-            + wordCategories[1] + "(2) "
-            + wordCategories[2] + " (3). Чтобы сделать выбор случайным нажмите Enter");
-
-        while (true) {
-            String selectedCategory = scanner.nextLine().trim();
-
-            switch (selectedCategory) {
-                case "1":
-                    return wordCategories[0];
-                case "2":
-                    return wordCategories[1];
-                case "3":
-                    return wordCategories[2];
-                case "":
-                    return wordCategories[random.nextInt(wordCategories.length)];
-                default:
-                    output.println("Некорректный ввод. Пожалуйста, введите 1, 2, 3 или оставьте строку пустой.");
-            }
-        }
-    }
-
-    private DifficultyLevel selectDifficulty(Scanner scanner, Random random) {
-        output.println("Введите цифру, которая соответствует выбранной сложности "
-            + DifficultyLevel.EASY + " (1), "
-            + DifficultyLevel.MEDIUM + " (2), "
-            + DifficultyLevel.HARD + " (3). Чтобы сделать выбор случайным нажмите Enter");
-
-        while (true) {
-            String selectedDifficulty = scanner.nextLine().trim();
-            //DifficultyLevel[] complexity = DifficultyLevel.values();
-
-            switch (selectedDifficulty) {
-                case "1":
-                    return DifficultyLevel.EASY;
-                case "2":
-                    return DifficultyLevel.MEDIUM;
-                case "3":
-                    return DifficultyLevel.HARD;
-                case "":
-                    return DifficultyLevel.values()[random.nextInt(DifficultyLevel.values().length)];
-                default:
-                    output.println("Некорректный ввод. Пожалуйста, введите 1, 2, 3 или оставьте строку пустой.");
-            }
+            io.displayMessage("You lost! The word you were trying to guess was: " + word.getWord());
         }
     }
 }
