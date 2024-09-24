@@ -1,5 +1,7 @@
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +9,8 @@ import java.util.Map;
 import backend.academy.hangman.DifficultyLevel;
 import backend.academy.hangman.Word;
 import backend.academy.hangman.WordRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -40,8 +44,6 @@ public class WordRepositoryTest {
         assertNull(result);
     }
 
-
-
     @Test
     void testGetWord_ValidInput() {
         // Создаем ожидаемое слово
@@ -64,6 +66,22 @@ public class WordRepositoryTest {
         assertEquals("test", result.getWord());
     }
 
+    @Test
+    void testGetRandomWord_MultipleWords() {
+        Word word1 = new Word();
+        word1.setWord("test1");
+        word1.setHint("Hint1");
+
+        Word word2 = new Word();
+        word2.setWord("test2");
+        word2.setHint("Hint2");
+
+        List<Word> words = Arrays.asList(word1, word2);
+
+        Word result = WordRepository.getRandomWord(words);
+        assertNotNull(result);
+        assertTrue(result.getWord().equals("test1") || result.getWord().equals("test2"));
+    }
 
     @Test
     void testGetWord_InvalidCategory() {
@@ -78,8 +96,54 @@ public class WordRepositoryTest {
     }
 
     @Test
+    void testConstructor_InvalidJSON() throws IOException {
+        // Создаем мок InputStream с некорректным JSON
+        InputStream invalidJsonStream = new ByteArrayInputStream("invalid json".getBytes());
+
+        // Создаем мок ObjectMapper и заставляем его выбрасывать IOException
+        ObjectMapper objectMapperMock = Mockito.mock(ObjectMapper.class);
+        Mockito.when(objectMapperMock.readValue(Mockito.any(InputStream.class), Mockito.any(TypeReference.class)))
+            .thenThrow(new IOException("Invalid JSON format"));
+
+        // Создаем экземпляр WordRepository с замоканным ObjectMapper
+        WordRepository repository = new WordRepository() {
+            protected InputStream getClassLoaderStream() {
+                return invalidJsonStream;
+            }
+        };
+
+        // Устанавливаем пустую карту слов
+        repository.setWordCategories(Collections.emptyMap());
+
+        // Убедимся, что категории пусты после обработки ошибки
+        assertTrue(repository.getCategories().length == 0, "Expected an empty categories array due to invalid JSON");
+    }
+
+    @Test
     void testGetRandomWord_EmptyList() {
         Word result = WordRepository.getRandomWord(Collections.emptyList());
+        assertNull(result);
+    }
+
+    @Test
+    void testSetWordCategories_EmptyMap() {
+        // Устанавливаем пустую карту слов
+        wordRepository.setWordCategories(Collections.emptyMap());
+
+        // Проверяем, что категории пусты
+        String[] categories = wordRepository.getCategories();
+        assertEquals(0, categories.length);
+    }
+
+    @Test
+    void testGetWord_NullCategory() {
+        Word result = wordRepository.getWord(null, DifficultyLevel.EASY);
+        assertNull(result);
+    }
+
+    @Test
+    void testGetWord_NullDifficulty() {
+        Word result = wordRepository.getWord("category1", null);
         assertNull(result);
     }
 

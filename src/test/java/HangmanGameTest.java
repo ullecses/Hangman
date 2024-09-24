@@ -38,7 +38,7 @@ public class HangmanGameTest {
         when(wordRepository.getWord("category1", DifficultyLevel.EASY)).thenReturn(word);
 
         when(io.getUserInput())
-                .thenReturn("t")  // Первый ввод
+                .thenReturn("T")  // Первый ввод
                 .thenReturn("e")  // Второй ввод
                 .thenReturn("s")  // Третий ввод
                 .thenReturn("t"); // Четвертый ввод

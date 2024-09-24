@@ -14,15 +14,26 @@ public class Main {
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
-        GameInputOutput io = new ConsoleGameInputOutput(System.in, System.out);
-        WordRepository wordRepository;
-        try {
-            wordRepository = new WordRepository(); // Обработка возможных исключений
-        } catch (IOException e) {
-            LOGGER.error("Error initializing WordRepository: {}", e.getMessage());
-            return; // Завершить выполнение программы, если не удалось создать WordRepository
+        GameInputOutput io = createGameInputOutput();
+        WordRepository wordRepository = createWordRepository();
+        if (wordRepository == null) {
+            return;
         }
+
         HangmanGame game = new HangmanGame(io, wordRepository);
         game.start();
+    }
+
+    public GameInputOutput createGameInputOutput() {
+        return new ConsoleGameInputOutput(System.in, System.out);
+    }
+
+    public WordRepository createWordRepository() {
+        try {
+            return new WordRepository();
+        } catch (IOException e) {
+            LOGGER.error("Error initializing WordRepository: {}", e.getMessage());
+            return null;
+        }
     }
 }

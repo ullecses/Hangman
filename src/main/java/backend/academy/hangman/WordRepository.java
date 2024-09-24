@@ -26,6 +26,7 @@ public class WordRepository {
             );
         } catch (IOException e) {
             System.err.println("Input/output error: " + e.getMessage());
+            wordCategories = Collections.emptyMap();
         }
         categoryOfWord = wordCategories.keySet().toArray(new String[0]);
     }
@@ -50,6 +51,9 @@ public class WordRepository {
     }
 
     public String[] getCategories() {
+        if (wordCategories == null || wordCategories.isEmpty()) {
+            return new String[0];  // Возвращаем пустой массив, если нет категорий
+        }
         return categoryOfWord;
     }
 }

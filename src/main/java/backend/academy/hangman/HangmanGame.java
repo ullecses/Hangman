@@ -28,7 +28,7 @@ public class HangmanGame {
         + (MAX_ATTEMPTS - wrongGuesses) + " incorrect attempts left.");
 
             if (hintUsed) {
-                io.displayMessage(HINT_PROMPT + word.getHint() + "Enter letter: ");
+                io.displayMessage(HINT_PROMPT + word.getHint() + "\nEnter letter: ");
             } else {
                 io.displayMessage("Enter a letter or press Enter to see a hint: ");
             }
