@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class WordRepository {
     private Map<String, Map<DifficultyLevel, List<Word>>> wordCategories;
-    String[] categoryOfWord;
+    private String[] categoryOfWord;
 
     public WordRepository() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();

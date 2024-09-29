@@ -24,42 +24,55 @@ public class ConsoleGameInputOutputTest {
 
     @Test
     void testDisplayMessage() {
+        // Arrange
         String message = "Hello, World!";
+
+        // Act
         consoleGameInputOutput.displayMessage(message);
 
+        // Assert
         assertEquals(message + System.lineSeparator(), outputStream.toString());
     }
 
+
     @Test
     void testGetUserInput() {
-        // Имитация ввода пользователя
+        // Arrange
         input = new ByteArrayInputStream("test input\n".getBytes());
         consoleGameInputOutput = new ConsoleGameInputOutput(input, output);
 
+        // Act
         String result = consoleGameInputOutput.getUserInput();
 
+        // Assert
         assertEquals("test input", result);
     }
 
     @Test
     void testSelectCategory_ValidInput() {
+        // Arrange
         String[] categories = {"Animals", "Fruits", "Vehicles"};
         input = new ByteArrayInputStream("1\n".getBytes());
         consoleGameInputOutput = new ConsoleGameInputOutput(input, output);
 
+        // Act
         String selectedCategory = consoleGameInputOutput.selectCategory(categories);
 
+        // Assert
         assertEquals("Animals", selectedCategory);
     }
 
     @Test
     void testSelectCategory_InvalidInput() {
+        // Arrange
         String[] categories = {"Animals", "Fruits", "Vehicles"};
         input = new ByteArrayInputStream("4\n1\n".getBytes());
         consoleGameInputOutput = new ConsoleGameInputOutput(input, output);
 
+        // Act
         String selectedCategory = consoleGameInputOutput.selectCategory(categories);
 
+        // Assert
         assertEquals("Animals", selectedCategory);
         String outputString = outputStream.toString();
         assertTrue(outputString.contains("Incorrect input."));
@@ -67,21 +80,27 @@ public class ConsoleGameInputOutputTest {
 
     @Test
     void testSelectDifficulty_ValidInput() {
+        // Arrange
         input = new ByteArrayInputStream("1\n".getBytes());
         consoleGameInputOutput = new ConsoleGameInputOutput(input, output);
 
+        // Act
         DifficultyLevel result = consoleGameInputOutput.selectDifficulty();
 
+        // Assert
         assertEquals(DifficultyLevel.EASY, result);
     }
 
     @Test
     void testSelectDifficulty_InvalidInput() {
+        // Arrange
         input = new ByteArrayInputStream("4\n2\n".getBytes());
         consoleGameInputOutput = new ConsoleGameInputOutput(input, output);
 
+        // Act
         DifficultyLevel result = consoleGameInputOutput.selectDifficulty();
 
+        // Assert
         assertEquals(DifficultyLevel.MEDIUM, result);
         String outputString = outputStream.toString();
         assertTrue(outputString.contains("Incorrect input."));

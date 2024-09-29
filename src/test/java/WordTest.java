@@ -10,6 +10,7 @@ public class WordTest {
 
     @BeforeEach
     void setUp() {
+        // Arrange
         word = new Word();
         word.setWord("hello");
         word.setHint("A greeting");
@@ -17,44 +18,72 @@ public class WordTest {
 
     @Test
     void testGetWord() {
-        assertEquals("hello", word.getWord());
+        // Act
+        String result = word.getWord();
+
+        // Assert
+        assertEquals("hello", result);
     }
 
     @Test
     void testGetHint() {
-        assertEquals("A greeting", word.getHint());
+        // Act
+        String result = word.getHint();
+
+        // Assert
+        assertEquals("A greeting", result);
     }
 
     @Test
     void testGuessLetter_CorrectGuess() {
-        assertTrue(word.guessLetter('h'));
+        // Act
+        boolean correctGuess = word.guessLetter('h');
+
+        // Assert
+        assertTrue(correctGuess);
         assertEquals("h____", word.getCurrentState());
     }
 
     @Test
     void testGuessLetter_IncorrectGuess() {
-        assertFalse(word.guessLetter('x'));
+        // Act
+        boolean incorrectGuess = word.guessLetter('x');
+
+        // Assert
+        assertFalse(incorrectGuess);
         assertEquals("_____", word.getCurrentState());
     }
 
     @Test
     void testIsWordGuessed_False() {
+        // Act
         word.guessLetter('h');
-        assertFalse(word.isWordGuessed());
+        boolean isGuessed = word.isWordGuessed();
+
+        // Assert
+        assertFalse(isGuessed);
     }
 
     @Test
     void testIsWordGuessed_True() {
+        // Act
         word.guessLetter('h');
         word.guessLetter('e');
         word.guessLetter('l');
         word.guessLetter('o');
-        assertTrue(word.isWordGuessed());
+        boolean isGuessed = word.isWordGuessed();
+
+        // Assert
+        assertTrue(isGuessed);
     }
 
     @Test
     void testGetCurrentState() {
+        // Act
         word.guessLetter('e');
-        assertEquals("_e___", word.getCurrentState());
+        String currentState = word.getCurrentState();
+
+        // Assert
+        assertEquals("_e___", currentState);
     }
 }

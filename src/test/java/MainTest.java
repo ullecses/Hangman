@@ -7,9 +7,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+
 import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class MainTest {
@@ -26,95 +28,121 @@ public class MainTest {
     }
 
     @Test
+    public void testCreateGameInputOutputCreatesCorrectInstance() {
+        // Arrange & Act
+        GameInputOutput result = Main.createGameInputOutput();
+
+        // Assert
+        assertNotNull(result);
+    }
+
+    @Test
     public void testMainSuccess() {
+        // Arrange
         try (MockedStatic<Main> mainMock = Mockito.mockStatic(Main.class)) {
-            // Мокаем методы Main
             mainMock.when(Main::createGameInputOutput).thenReturn(ioMock);
             mainMock.when(Main::createWordRepository).thenReturn(wordRepositoryMock);
 
+            // Act
             Main.main(new String[]{});
 
-            // Проверяем, что start() был вызван
-            verify(gameMock, never()).start(); // Игра создана, но не запущена, так как HangmanGame не мокируется здесь
+            // Assert
+            verify(gameMock, never()).start();
         }
     }
 
     @Test
     public void testMainIOException() {
+        // Arrange
         try (MockedStatic<Main> mainMock = Mockito.mockStatic(Main.class)) {
-            // Мокаем создание WordRepository, чтобы вернуть null
             mainMock.when(Main::createGameInputOutput).thenReturn(ioMock);
             mainMock.when(Main::createWordRepository).thenReturn(null);
 
+            // Act
             Main.main(new String[]{});
 
-            // Проверяем, что игра не запущена, если возникло исключение
+            // Assert
             verifyNoInteractions(ioMock); // Поскольку репозиторий null, HangmanGame не был создан
         }
     }
+
     @Test
     public void testMainWordRepositoryIOException() {
+        // Arrange
         try (MockedStatic<Main> mainMock = Mockito.mockStatic(Main.class)) {
             mainMock.when(Main::createGameInputOutput).thenReturn(ioMock);
             mainMock.when(Main::createWordRepository).thenThrow(new RuntimeException("Test exception"));
 
+            // Act
             Main.main(new String[]{});
 
+            // Assert
             verifyNoInteractions(ioMock);
         }
     }
 
     @Test
     public void testCreateGameInputOutput() {
+        // Arrange & Act
         GameInputOutput result = Main.createGameInputOutput();
+
+        // Assert
         assertNotNull(result);
-        assertTrue(result instanceof ConsoleGameInputOutput);
+        assertInstanceOf(ConsoleGameInputOutput.class, result);
     }
 
     @Test
     public void testCreateWordRepositorySuccess() throws IOException {
-        // Здесь можно дополнительно замокать возвращаемое значение
+        // Arrange & Act
         WordRepository result = Main.createWordRepository();
+
+        // Assert
         assertNotNull(result);
     }
 
     @Test
     public void testCreateWordRepositoryFileNotFound() {
+        // Arrange
         try (MockedStatic<Main> mainMock = Mockito.mockStatic(Main.class)) {
             mainMock.when(Main::createGameInputOutput).thenReturn(ioMock);
             mainMock.when(Main::createWordRepository).thenThrow(new RuntimeException("File not found"));
 
+            // Act
             Main.main(new String[]{});
 
+            // Assert
             verifyNoInteractions(ioMock);
         }
     }
 
     @Test
     public void testCreateWordRepositoryInvalidJSON() {
+        // Arrange
         try (MockedStatic<Main> mainMock = Mockito.mockStatic(Main.class)) {
             mainMock.when(Main::createGameInputOutput).thenReturn(ioMock);
             // Имитируем ситуацию, когда JSON неверный
             mainMock.when(Main::createWordRepository).thenThrow(new RuntimeException("Invalid JSON"));
 
+            // Act
             Main.main(new String[]{});
 
+            // Assert
             verifyNoInteractions(ioMock);
         }
     }
 
     @Test
     public void testMainWithValidWordRepository() {
+        // Arrange
         try (MockedStatic<Main> mainMock = Mockito.mockStatic(Main.class)) {
-            // Мокаем методы Main
             mainMock.when(Main::createGameInputOutput).thenReturn(ioMock);
             mainMock.when(Main::createWordRepository).thenReturn(wordRepositoryMock);
-
             when(wordRepositoryMock.getCategories()).thenReturn(new String[]{"category1"});
 
+            // Act
             Main.main(new String[]{});
 
-            // Проверяем, что игра была создана
+            // Assert
             verify(gameMock, never()).start(); // Игра должна была создана, но не запущена
         }
     }

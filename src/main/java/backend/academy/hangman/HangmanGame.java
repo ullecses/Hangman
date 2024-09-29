@@ -24,8 +24,12 @@ public class HangmanGame {
 
         while (wrongGuesses < MAX_ATTEMPTS && !word.isWordGuessed()) {
             io.displayHangman(wrongGuesses);
-            io.displayMessage("Current state of the word: " + word.getCurrentState() + "\nYou have "
-        + (MAX_ATTEMPTS - wrongGuesses) + " incorrect attempts left.");
+            io.displayMessage(String.format(
+                "Current state of the word: %s\nYou have %d incorrect attempts left.",
+                word.getCurrentState(),
+                MAX_ATTEMPTS - wrongGuesses
+            ));
+
 
             if (hintUsed) {
                 io.displayMessage(HINT_PROMPT + word.getHint() + "\nEnter letter: ");
@@ -35,7 +39,7 @@ public class HangmanGame {
 
             String guess = io.getUserInput();
 
-            if (guess == null || guess.isEmpty()) { //!@
+            if (guess == null || guess.isEmpty()) {
                 io.displayMessage(HINT_PROMPT + word.getHint());
                 hintUsed = true;
                 continue;

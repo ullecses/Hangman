@@ -16,9 +16,6 @@ public class Main {
     public static void main(String[] args) {
         GameInputOutput io = createGameInputOutput();
         WordRepository wordRepository = createWordRepository();
-        if (wordRepository == null) {
-            return;
-        }
 
         HangmanGame game = new HangmanGame(io, wordRepository);
         game.start();
@@ -33,7 +30,7 @@ public class Main {
             return new WordRepository();
         } catch (IOException e) {
             LOGGER.error("Error initializing WordRepository: {}", e.getMessage());
-            return null;
+            throw new RuntimeException("Error initializing WordRepository", e);
         }
     }
 }

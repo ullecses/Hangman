@@ -16,16 +16,12 @@ public class HangmanGameTest {
     void setUp() {
         io = mock(GameInputOutput.class);
         wordRepository = mock(WordRepository.class);
-        hangmanGame = new HangmanGame(io, wordRepository) {
-            WordRepository createWordRepository() {
-                return wordRepository;
-            }
-        };
+        hangmanGame = new HangmanGame(io, wordRepository) {};
     }
 
     @Test
     void testStartGame_SuccessfulGuess() {
-        // Настройка
+        // Arrange
         Word word = new Word();
         word.setWord("test");
         word.setHint("A sample word");
@@ -38,22 +34,22 @@ public class HangmanGameTest {
         when(wordRepository.getWord("category1", DifficultyLevel.EASY)).thenReturn(word);
 
         when(io.getUserInput())
-                .thenReturn("T")  // Первый ввод
-                .thenReturn("e")  // Второй ввод
-                .thenReturn("s")  // Третий ввод
-                .thenReturn("t"); // Четвертый ввод
+            .thenReturn("T")  // Первый ввод
+            .thenReturn("e")  // Второй ввод
+            .thenReturn("s")  // Третий ввод
+            .thenReturn("t"); // Четвертый ввод
 
-        HangmanGame hangmanGame = new HangmanGame(io, wordRepository);
+        // Act
         hangmanGame.start();
 
-        // Проверка
+        // Assert
         verify(io).displayMessage("You have 6 attempts! The game has begun!");
         verify(io).displayMessage("Congratulations! You guessed the word: test");
     }
 
     @Test
     void testStartGame_Loss() {
-        // Настройка
+        // Arrange
         Word word = new Word();
         word.setWord("test");
         word.setHint("A sample word");
@@ -66,24 +62,24 @@ public class HangmanGameTest {
         when(wordRepository.getWord("category1", DifficultyLevel.EASY)).thenReturn(word);
 
         when(io.getUserInput())
-                .thenReturn("x")  // Неправильный ввод
-                .thenReturn("y")  // Неправильный ввод
-                .thenReturn("z")  // Неправильный ввод
-                .thenReturn("q")  // Неправильный ввод
-                .thenReturn("w")  // Неправильный ввод
-                .thenReturn("r");  // Неправильный ввод
+            .thenReturn("x")  // Неправильный ввод
+            .thenReturn("y")  // Неправильный ввод
+            .thenReturn("z")  // Неправильный ввод
+            .thenReturn("q")  // Неправильный ввод
+            .thenReturn("w")  // Неправильный ввод
+            .thenReturn("r");  // Неправильный ввод
 
+        // Act
         hangmanGame.start();
 
-        // Проверка
+        // Assert
         verify(io).displayMessage("You have 6 attempts! The game has begun!");
         verify(io).displayMessage("You lost! The word you were trying to guess was: test");
     }
 
-
     @Test
     void testStartGame_UseHint() {
-        // Настройка
+        // Arrange
         Word word = new Word();
         word.setWord("test");
         word.setHint("A sample word");
@@ -96,23 +92,23 @@ public class HangmanGameTest {
         when(wordRepository.getWord("category1", DifficultyLevel.EASY)).thenReturn(word);
 
         when(io.getUserInput())
-                .thenReturn("")   // Ввод пустой строки для подсказки
-                .thenReturn("t")  // Правильный ввод
-                .thenReturn("e")  // Правильный ввод
-                .thenReturn("s")  // Правильный ввод
-                .thenReturn("t"); // Правильный ввод
+            .thenReturn("")   // Ввод пустой строки для подсказки
+            .thenReturn("t")  // Правильный ввод
+            .thenReturn("e")  // Правильный ввод
+            .thenReturn("s")  // Правильный ввод
+            .thenReturn("t"); // Правильный ввод
 
+        // Act
         hangmanGame.start();
 
-        // Проверка
+        // Assert
         verify(io).displayMessage("Hint: A sample word");
         verify(io).displayMessage("Congratulations! You guessed the word: test");
     }
 
-
     @Test
     void testStartGame_InvalidInput() {
-        // Настройка
+        // Arrange
         Word word = new Word();
         word.setWord("test");
         word.setHint("A sample word");
@@ -132,14 +128,10 @@ public class HangmanGameTest {
             .thenReturn("s")  // Некорректный ввод
             .thenReturn("t"); // Правильный ввод
 
-        HangmanGame hangmanGame = new HangmanGame(io, wordRepository);
+        // Act
         hangmanGame.start();
+
+        // Assert
         verify(io, times(2)).displayMessage("Incorrect input! Enter one letter.");
-
-        // Проверка: метод вывода сообщения "Enter one English letter" должен быть вызван для некорректного ввода "%"
-        //verify(io).displayMessage("Enter one English letter.");
-
-        // Проверка
-        //verify(io, times(2)).displayMessage("Incorrect input! Enter one letter.");
     }
 }

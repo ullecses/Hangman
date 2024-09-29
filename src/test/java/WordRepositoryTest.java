@@ -1,4 +1,3 @@
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -24,50 +23,44 @@ public class WordRepositoryTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        wordRepository = Mockito.spy(new WordRepository() {
-            public InputStream getClassLoaderStream() {
-                return getClass().getClassLoader().getResourceAsStream("test_words.json");
-            }
-        });
+        wordRepository = Mockito.spy(new WordRepository() {});
     }
 
     @Test
     void testConstructor_FileNotFound() throws IOException {
-        // Создаем экземпляр WordRepository
+        // Arrange
         WordRepository repository = new WordRepository();
-
-        // Устанавливаем пустую карту слов для имитации отсутствия данных
         repository.setWordCategories(Collections.emptyMap());
 
-        // Проверяем, что вызов getWord с неверной категорией возвращает null
+        // Act
         Word result = repository.getWord("nonExistingCategory", DifficultyLevel.EASY);
+
+        // Assert
         assertNull(result);
     }
 
     @Test
     void testGetWord_ValidInput() {
-        // Создаем ожидаемое слово
+        // Arrange
         Word expectedWord = new Word();
         expectedWord.setWord("test");
         expectedWord.setHint("A sample word");
 
-        // Создаем карту с уровнями сложности
         Map<DifficultyLevel, List<Word>> difficultyMap = new HashMap<>();
         difficultyMap.put(DifficultyLevel.EASY, Collections.singletonList(expectedWord));
-
-        // Устанавливаем категории слов через сеттер
         wordRepository.setWordCategories(Collections.singletonMap("category1", difficultyMap));
 
-        // Получаем слово из репозитория
+        // Act
         Word result = wordRepository.getWord("category1", DifficultyLevel.EASY);
 
-        // Проверяем результат
+        // Assert
         assertNotNull(result);
         assertEquals("test", result.getWord());
     }
 
     @Test
     void testGetRandomWord_MultipleWords() {
+        // Arrange
         Word word1 = new Word();
         word1.setWord("test1");
         word1.setHint("Hint1");
@@ -78,78 +71,92 @@ public class WordRepositoryTest {
 
         List<Word> words = Arrays.asList(word1, word2);
 
+        // Act
         Word result = WordRepository.getRandomWord(words);
+
+        // Assert
         assertNotNull(result);
         assertTrue(result.getWord().equals("test1") || result.getWord().equals("test2"));
     }
 
     @Test
     void testGetWord_InvalidCategory() {
+        // Arrange & Act
         Word result = wordRepository.getWord("invalidCategory", DifficultyLevel.EASY);
+
+        // Assert
         assertNull(result);
     }
 
     @Test
     void testGetWord_InvalidDifficulty() {
+        // Arrange & Act
         Word result = wordRepository.getWord("category1", DifficultyLevel.HARD);
+
+        // Assert
         assertNull(result);
     }
 
     @Test
     void testConstructor_InvalidJSON() throws IOException {
-        // Создаем мок InputStream с некорректным JSON
-        InputStream invalidJsonStream = new ByteArrayInputStream("invalid json".getBytes());
-
-        // Создаем мок ObjectMapper и заставляем его выбрасывать IOException
+        // Arrange
         ObjectMapper objectMapperMock = Mockito.mock(ObjectMapper.class);
         Mockito.when(objectMapperMock.readValue(Mockito.any(InputStream.class), Mockito.any(TypeReference.class)))
             .thenThrow(new IOException("Invalid JSON format"));
 
-        // Создаем экземпляр WordRepository с замоканным ObjectMapper
-        WordRepository repository = new WordRepository() {
-            protected InputStream getClassLoaderStream() {
-                return invalidJsonStream;
-            }
-        };
-
-        // Устанавливаем пустую карту слов
+        WordRepository repository = new WordRepository() {};
         repository.setWordCategories(Collections.emptyMap());
 
-        // Убедимся, что категории пусты после обработки ошибки
-        assertTrue(repository.getCategories().length == 0, "Expected an empty categories array due to invalid JSON");
+        // Act
+        String[] categories = repository.getCategories();
+
+        // Assert
+        assertEquals(0, categories.length, "Expected an empty categories array due to invalid JSON");
     }
 
     @Test
     void testGetRandomWord_EmptyList() {
+        // Arrange & Act
         Word result = WordRepository.getRandomWord(Collections.emptyList());
+
+        // Assert
         assertNull(result);
     }
 
     @Test
     void testSetWordCategories_EmptyMap() {
-        // Устанавливаем пустую карту слов
+        // Arrange & Act
         wordRepository.setWordCategories(Collections.emptyMap());
 
-        // Проверяем, что категории пусты
+        // Assert
         String[] categories = wordRepository.getCategories();
         assertEquals(0, categories.length);
     }
 
     @Test
     void testGetWord_NullCategory() {
+        // Arrange & Act
         Word result = wordRepository.getWord(null, DifficultyLevel.EASY);
+
+        // Assert
         assertNull(result);
     }
 
     @Test
     void testGetWord_NullDifficulty() {
+        // Arrange & Act
         Word result = wordRepository.getWord("category1", null);
+
+        // Assert
         assertNull(result);
     }
 
     @Test
     void testGetCategories() {
+        // Arrange & Act
         String[] categories = wordRepository.getCategories();
+
+        // Assert
         assertNotNull(categories);
         assertTrue(categories.length > 0);
     }

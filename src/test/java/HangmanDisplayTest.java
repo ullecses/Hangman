@@ -7,19 +7,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class HangmanDisplayTest {
     private ByteArrayOutputStream outputStream;
-    private PrintStream output;
     private HangmanDisplay hangmanDisplay;
 
     @BeforeEach
     void setUp() {
         outputStream = new ByteArrayOutputStream();
-        output = new PrintStream(outputStream);
+        PrintStream output = new PrintStream(outputStream);
         hangmanDisplay = new HangmanDisplay(output);
     }
 
     @Test
     void testDisplayHangman_0WrongGuesses() {
-        hangmanDisplay.displayHangman(0);
+        // Arrange
+        int wrongGuesses = 0;
         String expectedOutput = """
            -----
            |   |
@@ -29,12 +29,18 @@ class HangmanDisplayTest {
                |
                |
         =========""";
+
+        // Act
+        hangmanDisplay.displayHangman(wrongGuesses);
+
+        // Assert
         assertEquals(expectedOutput.trim(), outputStream.toString().trim());
     }
 
     @Test
     void testDisplayHangman_1WrongGuess() {
-        hangmanDisplay.displayHangman(1);
+        // Arrange
+        int wrongGuesses = 1;
         String expectedOutput = """
            -----
            |   |
@@ -44,12 +50,18 @@ class HangmanDisplayTest {
                |
                |
         =========""";
+
+        // Act
+        hangmanDisplay.displayHangman(wrongGuesses);
+
+        // Assert
         assertEquals(expectedOutput.trim(), outputStream.toString().trim());
     }
 
     @Test
     void testDisplayHangman_2WrongGuesses() {
-        hangmanDisplay.displayHangman(2);
+        // Arrange
+        int wrongGuesses = 2;
         String expectedOutput = """
            -----
            |   |
@@ -59,12 +71,18 @@ class HangmanDisplayTest {
                |
                |
         =========""";
+
+        // Act
+        hangmanDisplay.displayHangman(wrongGuesses);
+
+        // Assert
         assertEquals(expectedOutput.trim(), outputStream.toString().trim());
     }
 
     @Test
     void testDisplayHangman_3WrongGuesses() {
-        hangmanDisplay.displayHangman(3);
+        // Arrange
+        int wrongGuesses = 3;
         String expectedOutput = """
            -----
            |   |
@@ -74,12 +92,18 @@ class HangmanDisplayTest {
                |
                |
         =========""";
+
+        // Act
+        hangmanDisplay.displayHangman(wrongGuesses);
+
+        // Assert
         assertEquals(expectedOutput.trim(), outputStream.toString().trim());
     }
 
     @Test
     void testDisplayHangman_4WrongGuesses() {
-        hangmanDisplay.displayHangman(4);
+        // Arrange
+        int wrongGuesses = 4;
         String expectedOutput = """
            -----
            |   |
@@ -89,12 +113,18 @@ class HangmanDisplayTest {
                |
                |
         =========""";
+
+        // Act
+        hangmanDisplay.displayHangman(wrongGuesses);
+
+        // Assert
         assertEquals(expectedOutput.trim(), outputStream.toString().trim());
     }
 
     @Test
     void testDisplayHangman_5WrongGuesses() {
-        hangmanDisplay.displayHangman(5);
+        // Arrange
+        int wrongGuesses = 5;
         String expectedOutput = """
            -----
            |   |
@@ -104,12 +134,18 @@ class HangmanDisplayTest {
                |
                |
         =========""";
+
+        // Act
+        hangmanDisplay.displayHangman(wrongGuesses);
+
+        // Assert
         assertEquals(expectedOutput.trim(), outputStream.toString().trim());
     }
 
     @Test
     void testDisplayHangman_6WrongGuesses() {
-        hangmanDisplay.displayHangman(6);
+        // Arrange
+        int wrongGuesses = 6;
         String expectedOutput = """
            -----
            |   |
@@ -119,6 +155,11 @@ class HangmanDisplayTest {
                |
                |
         =========""";
+
+        // Act
+        hangmanDisplay.displayHangman(wrongGuesses);
+
+        // Assert
         assertEquals(expectedOutput.trim(), outputStream.toString().trim());
     }
 }
