@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Шаблон Java-проекта для домашних заданий
 
 Шаблон для домашних заданий [Академии Бэкенда 2024][course-url].
@@ -135,3 +136,6 @@ mvn help:describe -Dplugin=compiler
   https://docs.oracle.com/en/java/javase/22/docs/api/index.html
 
 [course-url]: https://edu.tinkoff.ru/all-activities/courses/870efa9d-7067-4713-97ae-7db256b73eab
+=======
+# Hangman
+>>>>>>> c13146b45dd8774b8b94f6e8a5b112b1613ab8eb
